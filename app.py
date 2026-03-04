@@ -260,22 +260,33 @@ with aba3:
                 plan[f"AS{linha_atual}"] = amostra["Dispersão"]
                 linha_atual += 2
 
-            # Bordas externas
-            for row_idx in range(39, 164):
+            # ── Remove linhas em branco entre última amostra e as notas ──
+            if linha_atual <= 160:
+                qtd_deletar = 160 - linha_atual + 1
+                plan.delete_rows(linha_atual, qtd_deletar)
+
+            # Após a deleção, recalcula posições
+            linha_notas = linha_atual + 1
+            linha_resp  = linha_atual
+            linha_assin = linha_atual + 1
+
+            # Bordas externas ajustadas
+            for row_idx in range(39, linha_atual + 5):
                 cell = plan.cell(row=row_idx, column=45)
                 b = copy(cell.border) if cell.border else Border()
                 b.right = borda_grossa
                 cell.border = b
             for col_idx in range(1, 46):
-                cell = plan.cell(row=163, column=col_idx)
+                cell = plan.cell(row=linha_atual + 4, column=col_idx)
                 b = copy(cell.border) if cell.border else Border()
                 b.bottom = borda_grossa
                 cell.border = b
 
             # Notas e responsável
-            plan["B162"]  = notas
-            plan["AB161"] = f"{resp_nome}\nCREA: {resp_crea}"
-            plan["AB161"].alignment = Alignment(wrap_text=True, horizontal="center", vertical="bottom")
+            plan[f"B{linha_notas}"]  = notas
+            plan[f"AB{linha_resp}"]  = f"{resp_nome}
+CREA: {resp_crea}"
+            plan[f"AB{linha_resp}"].alignment = Alignment(wrap_text=True, horizontal="center", vertical="bottom")
 
             # Assinatura
             if assinatura is not None:
@@ -283,7 +294,7 @@ with aba3:
                     img        = xlImage(io.BytesIO(assinatura.read()))
                     img.width  = 160
                     img.height = 55
-                    plan.add_image(img, "AJ162")
+                    plan.add_image(img, f"AJ{linha_assin}")
                 except Exception:
                     pass
 
