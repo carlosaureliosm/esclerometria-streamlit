@@ -284,8 +284,7 @@ with aba3:
 
             # Notas e responsável
             plan[f"B{linha_notas}"]  = notas
-            plan[f"AB{linha_resp}"]  = f"{resp_nome}
-CREA: {resp_crea}"
+            plan[f"AB{linha_resp}"]  = f"{resp_nome}\nCREA: {resp_crea}"
             plan[f"AB{linha_resp}"].alignment = Alignment(wrap_text=True, horizontal="center", vertical="bottom")
 
             # Assinatura
